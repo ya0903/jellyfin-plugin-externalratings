@@ -8,25 +8,29 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup .NET
+      - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
+      - name: Add Jellyfin NuGet source
+        run: dotnet nuget add source https://repo.jellyfin.org/packages/nuget --name jellyfin
+
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore Jellyfin.Plugin.ExternalRatings.csproj
 
-      - name: Build
-        run: dotnet publish -c Release -o ./dist
+      - name: Build and publish
+        run: dotnet publish Jellyfin.Plugin.ExternalRatings.csproj -c Release -o ./dist
 
-      - name: Zip plugin
+      - name: Create release zip
         run: |
           cd dist
-          zip -r ../Jellyfin.Plugin.ExternalRatings_${{ github.event.release.tag_name }}.zip Jellyfin.Plugin.ExternalRatings.dll
+          zip -j ../Jellyfin.Plugin.ExternalRatings_${{ github.event.release.tag_name }}.zip Jellyfin.Plugin.ExternalRatings.dll
 
-      - name: Upload to Release
+      - name: Upload zip to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: Jellyfin.Plugin.ExternalRatings_${{ github.event.release.tag_name }}.zip
