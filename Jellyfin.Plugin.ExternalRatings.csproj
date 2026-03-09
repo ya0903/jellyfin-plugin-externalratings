@@ -12,9 +12,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Jellyfin.Controller" Version="10.9.*" />
-    <PackageReference Include="Jellyfin.Model" Version="10.9.*" />
-    <PackageReference Include="MediaBrowser.Common" Version="10.9.*" />
+    <PackageReference Include="Jellyfin.Controller" Version="10.9.6" />
+    <PackageReference Include="Jellyfin.Model" Version="10.9.6" />
+    <PackageReference Include="MediaBrowser.Common" Version="10.9.6" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
     <PackageReference Include="Jellyfin.Model" Version="10.9.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
