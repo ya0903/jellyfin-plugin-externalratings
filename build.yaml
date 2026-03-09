@@ -1,0 +1,11 @@
+---
+version: 1
+guid: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+name: "External Ratings"
+description: "Displays Letterboxd ratings for movies and IMDB ratings for TV shows."
+overview: "Shows Letterboxd ratings on movie detail pages and IMDB ratings on TV show detail pages within Jellyfin."
+category: "Metadata"
+owner: "jellyfin-external-ratings"
+autoUpdate: true
+artifacts:
+  - "Jellyfin.Plugin.ExternalRatings.dll"
