@@ -13,7 +13,7 @@
         "changelog": "Initial release.",
         "targetAbi": "10.9.0.0",
         "sourceUrl": "https://github.com/ya0903/jellyfin-plugin-externalratings/archive/refs/tags/v1.0.0.zip",
-        "checksum": ,
+        "checksum": "",
         "timestamp": "2025-01-01T00:00:00Z"
       }
     ]
