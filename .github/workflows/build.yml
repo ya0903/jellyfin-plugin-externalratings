@@ -1,0 +1,32 @@
+name: Build and Release Plugin
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet publish -c Release -o ./dist
+
+      - name: Zip plugin
+        run: |
+          cd dist
+          zip -r ../Jellyfin.Plugin.ExternalRatings_${{ github.event.release.tag_name }}.zip Jellyfin.Plugin.ExternalRatings.dll
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Jellyfin.Plugin.ExternalRatings_${{ github.event.release.tag_name }}.zip
