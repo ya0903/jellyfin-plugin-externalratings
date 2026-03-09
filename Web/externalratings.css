@@ -1,0 +1,15 @@
+/* External Ratings Plugin - Additional Styles */
+/* These styles are injected into the Jellyfin web client */
+
+/* This file is intentionally minimal - main styles are injected by the JS */
+/* Add any theme-specific overrides here */
+
+/* Backdrop blur for badges on lighter themes */
+@media (prefers-color-scheme: light) {
+    .er-badge-letterboxd {
+        box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+    .er-badge-imdb {
+        box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+}
