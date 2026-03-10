@@ -69,7 +69,7 @@ public class ExternalRatingService
         var config = Plugin.Instance?.Configuration ?? new PluginConfiguration();
         var results = new List<RatingCacheEntry>();
 
-        var imdbId = item.GetProviderId("Imdb");
+        item.ProviderIds.TryGetValue("Imdb", out var imdbId);
         var title = item.Name;
         var year = item.ProductionYear;
 
