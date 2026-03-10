@@ -25,10 +25,22 @@ jobs:
       - name: Build and publish
         run: dotnet publish Jellyfin.Plugin.ExternalRatings.csproj -c Release -o ./dist
 
-      - name: Create release zip
+     - name: Create release zip
         run: |
           cd dist
           zip -j ../Jellyfin.Plugin.ExternalRatings_${{ github.event.release.tag_name }}.zip Jellyfin.Plugin.ExternalRatings.dll
+
+      - name: Compute checksum and update manifest
+        run: |
+          CHECKSUM=$(md5sum Jellyfin.Plugin.ExternalRatings_${{ github.event.release.tag_name }}.zip | awk '{print toupper($1)}')
+          TAG=${{ github.event.release.tag_name }}
+          sed -i "s|\"checksum\":.*|\"checksum\": \"$CHECKSUM\",|" manifest.json
+          sed -i "s|releases/download/.*/Jellyfin|releases/download/$TAG/Jellyfin|" manifest.json
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add manifest.json
+          git commit -m "Update manifest checksum for $TAG"
+          git push
 
       - name: Upload zip to GitHub Release
         uses: softprops/action-gh-release@v2
