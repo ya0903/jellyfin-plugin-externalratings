@@ -105,18 +105,23 @@
             pluginUniqueId: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'
         };
 
-        document.querySelector('#ExternalRatingsConfigPage').addEventListener('pageshow', function () {
+        function loadConfig() {
             Dashboard.showLoadingMsg();
             ApiClient.getPluginConfiguration(ExternalRatingsConfig.pluginUniqueId).then(function (config) {
-                document.querySelector('#chkEnableLetterboxd').checked = config.EnableLetterboxdRatings;
-                document.querySelector('#chkEnableImdb').checked = config.EnableImdbTvRatings;
-                document.querySelector('#chkShowBadge').checked = config.ShowRatingBadge;
-                document.querySelector('#chkShowOnCards').checked = config.ShowRatingOnCards;
+                document.querySelector('#chkEnableLetterboxd').checked = config.EnableLetterboxdRatings !== false;
+                document.querySelector('#chkEnableImdb').checked = config.EnableImdbTvRatings !== false;
+                document.querySelector('#chkShowBadge').checked = config.ShowRatingBadge !== false;
+                document.querySelector('#chkShowOnCards').checked = config.ShowRatingOnCards === true;
                 document.querySelector('#numCacheDuration').value = config.CacheDurationHours || 24;
-                // Don't pre-fill password
+                if (config.OmdbApiKey) {
+                    document.querySelector('#txtOmdbApiKey').value = config.OmdbApiKey;
+                }
                 Dashboard.hideLoadingMsg();
             });
-        });
+        }
+
+        document.querySelector('#ExternalRatingsConfigPage').addEventListener('pageshow', loadConfig);
+        window.addEventListener('load', loadConfig);
 
         document.querySelector('.ExternalRatingsConfigForm').addEventListener('submit', function (e) {
             e.preventDefault();
@@ -128,15 +133,10 @@
                 config.ShowRatingBadge = document.querySelector('#chkShowBadge').checked;
                 config.ShowRatingOnCards = document.querySelector('#chkShowOnCards').checked;
                 config.CacheDurationHours = parseInt(document.querySelector('#numCacheDuration').value, 10) || 24;
-
-                var apiKey = document.querySelector('#txtOmdbApiKey').value;
-                if (apiKey && apiKey.trim()) {
-                    config.OmdbApiKey = apiKey.trim();
-                }
+                config.OmdbApiKey = document.querySelector('#txtOmdbApiKey').value.trim();
 
                 ApiClient.updatePluginConfiguration(ExternalRatingsConfig.pluginUniqueId, config).then(function () {
                     Dashboard.processPluginConfigurationUpdateResult();
-                    Dashboard.hideLoadingMsg();
                 });
             });
         });
@@ -144,11 +144,13 @@
         document.querySelector('#btnClearCache').addEventListener('click', function () {
             if (!confirm('Clear all cached ratings? They will be re-fetched on next view.')) return;
             Dashboard.showLoadingMsg();
-            fetch('/ExternalRatings/cache', { method: 'DELETE', headers: { 'Authorization': 'MediaBrowser Token="' + ApiClient.accessToken() + '"' } })
-                .then(function () {
-                    Dashboard.hideLoadingMsg();
-                    Dashboard.alert({ message: 'Rating cache cleared.' });
-                });
+            fetch('/ExternalRatings/cache', {
+                method: 'DELETE',
+                headers: { 'Authorization': 'MediaBrowser Token="' + ApiClient.accessToken() + '"' }
+            }).then(function () {
+                Dashboard.hideLoadingMsg();
+                Dashboard.alert({ message: 'Rating cache cleared.' });
+            });
         });
     </script>
 </body>
