@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.ExternalRatings.Models;
 using Jellyfin.Plugin.ExternalRatings.Services;
-using MediaBrowser.Controller.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,23 +26,16 @@ public class ExternalRatingsController : ControllerBase
     /// <summary>
     /// Initializes a new instance of the <see cref="ExternalRatingsController"/> class.
     /// </summary>
-    public ExternalRatingsController(
-        ExternalRatingService ratingService,
-        RatingCacheService cacheService,
-        ILogger<ExternalRatingsController> logger)
+    public ExternalRatingsController(ILogger<ExternalRatingsController> logger)
     {
-        _ratingService = ratingService;
-        _cacheService = cacheService;
+        _ratingService = PluginServiceLocator.RatingService!;
+        _cacheService = PluginServiceLocator.CacheService!;
         _logger = logger;
     }
 
     /// <summary>
     /// Gets external ratings for a Jellyfin item.
     /// </summary>
-    /// <param name="itemId">The item ID.</param>
-    /// <param name="forceRefresh">Force a fresh fetch, bypassing cache.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>List of rating entries.</returns>
     [HttpGet("ratings/{itemId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
