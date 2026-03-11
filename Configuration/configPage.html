@@ -95,11 +95,17 @@
             return 'MediaBrowser Token="' + ApiClient.accessToken() + '"';
         }
 
-        // Sets a checkbox and fires a change event so emby-checkbox web component picks it up
+        // Sets a checkbox for emby-checkbox web components.
+        // emby-checkbox tracks visual state via the HTML *attribute*, not just the JS property.
+        // We must set/remove the attribute AND the property to keep both in sync.
         function setCheckbox(id, value) {
             var el = document.getElementById(id);
-            el.checked = value;
-            el.dispatchEvent(new Event('change', { bubbles: true }));
+            if (value) {
+                el.setAttribute('checked', 'checked');
+            } else {
+                el.removeAttribute('checked');
+            }
+            el.checked = !!value;
         }
 
         function loadConfig() {
@@ -174,17 +180,18 @@
             });
         });
 
-        // Load on Jellyfin SPA page navigation
+        // Load on Jellyfin SPA page navigation and on initial load.
+        // We wait 300ms to ensure emby-checkbox custom elements have fully upgraded
+        // before we try to set their state.
         var page = document.getElementById('ExternalRatingsConfigPage');
         if (page) {
             page.addEventListener('pageshow', function () {
-                // Delay to ensure emby-checkbox custom elements have fully upgraded
-                setTimeout(loadConfig, 150);
+                setTimeout(loadConfig, 300);
             });
         }
 
-        // Also load on initial page load with the same delay
-        setTimeout(loadConfig, 150);
+        // Fallback for initial hard load (pageshow may not fire on first render)
+        setTimeout(loadConfig, 300);
 
     })();
 </script>
