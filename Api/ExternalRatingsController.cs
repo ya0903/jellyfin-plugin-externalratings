@@ -37,18 +37,18 @@ public class ExternalRatingsController : ControllerBase
     /// Gets external ratings for a Jellyfin item.
     /// </summary>
     [HttpGet("ratings/{itemId}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<RatingDto>>> GetRatings(
-        [FromRoute] Guid itemId,
+        [FromRoute] string itemId,
         [FromQuery] bool forceRefresh = false,
         CancellationToken cancellationToken = default)
     {
-        var ratings = await _ratingService.GetRatingsAsync(itemId, forceRefresh, cancellationToken).ConfigureAwait(false);
-        var list = ratings.ToList();
+        if (!Guid.TryParse(itemId, out var id) && 
+            !Guid.TryParseExact(itemId, "N", out id))
+            return BadRequest("Invalid item ID");
 
-        if (!list.Any())
-            return NotFound();
+        var ratings = await _ratingService.GetRatingsAsync(id, forceRefresh, cancellationToken).ConfigureAwait(false);
+        var list = ratings.ToList();
+        if (!list.Any()) return NotFound();
 
         return Ok(list.Select(r => new RatingDto
         {
