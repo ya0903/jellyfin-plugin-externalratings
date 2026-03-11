@@ -29,10 +29,9 @@ jobs:
           sed -i "s|releases/download/.*/Jellyfin|releases/download/$TAG/Jellyfin|" manifest.json
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git checkout main
           git add manifest.json
           git commit -m "Update manifest checksum for $TAG"
-          git push
+          git push origin HEAD:refs/heads/main
       - name: Upload zip to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
