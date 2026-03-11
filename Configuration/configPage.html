@@ -4,14 +4,11 @@
     <meta charset="utf-8">
     <title>External Ratings</title>
     <style>
-        .er-section { margin: 0 0 24px 0; }
-        .er-section h3 { margin: 0 0 10px 0; font-size: 1em; font-weight: 600; }
-
         .er-row {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin: 8px 0;
+            margin: 10px 0;
             cursor: pointer;
         }
         .er-row input[type="checkbox"] {
@@ -21,263 +18,205 @@
             accent-color: #00a4dc;
             flex-shrink: 0;
         }
-
-        .er-field { margin: 10px 0; }
-        .er-field label { display: block; margin-bottom: 4px; font-size: 0.85em; color: var(--text-color-secondary, #aaa); }
-        .er-field input {
-            width: 100%;
-            max-width: 400px;
-            padding: 8px 10px;
-            background: var(--input-bg, rgba(255,255,255,0.08));
-            border: 1px solid var(--input-border, rgba(255,255,255,0.2));
-            border-radius: 4px;
-            color: var(--text-color, #fff);
-            font-size: 1em;
-            box-sizing: border-box;
-        }
-
-        .er-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            margin: 4px 0;
-        }
-        .er-btn-save  { background: #00a4dc; color: #fff; }
-        .er-btn-save:hover { background: #0090c0; }
-        .er-btn-clear { background: rgba(255,255,255,0.12); color: var(--text-color, #fff); }
-        .er-btn-clear:hover { background: rgba(255,255,255,0.2); }
-
         #erStatus {
-            padding: 10px 14px;
-            border-radius: 4px;
-            margin: 10px 0;
-            font-weight: 500;
             display: none;
+            padding: 9px 13px;
+            border-radius: 4px;
+            margin: 8px 0 12px;
+            font-weight: 500;
+            font-size: 0.9em;
         }
         #erStatus.ok  { display: block; background: rgba(0,200,80,0.15);  color: #00c850; }
         #erStatus.err { display: block; background: rgba(255,60,60,0.15); color: #ff5050; }
     </style>
 </head>
 <body>
-<div id="ExternalRatingsConfigPage"
-     data-role="page"
-     class="page type-interior pluginConfigurationPage">
+    <div id="ExternalRatingsConfigPage"
+         data-role="page"
+         class="page type-interior pluginConfigurationPage"
+         data-require="emby-input,emby-button,emby-select">
 
-    <div data-role="content">
-        <div class="content-primary">
+        <div data-role="content">
+            <div class="content-primary">
 
-            <h2>External Ratings Settings</h2>
-            <div id="erStatus"></div>
-
-            <div class="er-section">
-                <h3>🎬 Letterboxd (Movies)</h3>
-                <label class="er-row">
-                    <input type="checkbox" id="chkEnableLetterboxd" />
-                    <span>Enable Letterboxd ratings for movies</span>
-                </label>
-                <p style="color:var(--text-color-secondary,#aaa);font-size:0.85em;margin:4px 0 0 28px;">
-                    Scraped from letterboxd.com — no API key needed. 5-star scale.
+                <div class="sectionTitleContainer flex align-items-center">
+                    <h2 class="sectionTitle">External Ratings</h2>
+                </div>
+                <p style="color: var(--text-color-secondary);">
+                    Shows Letterboxd ratings for movies and IMDB ratings for TV shows directly in Jellyfin.
                 </p>
-            </div>
 
-            <div class="er-section">
-                <h3>📺 IMDB (TV Shows)</h3>
-                <label class="er-row">
-                    <input type="checkbox" id="chkEnableImdb" />
-                    <span>Enable IMDB ratings for TV shows</span>
-                </label>
-                <div class="er-field" style="margin-left:28px;">
-                    <label for="txtOmdbApiKey">OMDB API Key</label>
-                    <input type="password" id="txtOmdbApiKey" autocomplete="off"
-                           placeholder="Get a free key at omdbapi.com/apikey.aspx" />
-                    <p style="color:var(--text-color-secondary,#aaa);font-size:0.85em;margin:4px 0 0;">
-                        <a href="https://www.omdbapi.com/apikey.aspx" target="_blank" rel="noopener">Get a free key here</a> (1,000 req/day).
+                <div class="verticalSection">
+                    <h3 class="sectionTitle">🎬 Letterboxd (Movies)</h3>
+                    <label class="er-row">
+                        <input type="checkbox" id="chkEnableLetterboxd" />
+                        <span>Enable Letterboxd ratings for movies</span>
+                    </label>
+                    <p style="color: var(--text-color-secondary); font-size: 0.9em;">
+                        Fetched from letterboxd.com — no API key needed. 5-star scale.
                     </p>
                 </div>
-            </div>
 
-            <div class="er-section">
-                <h3>🎨 Display</h3>
-                <label class="er-row">
-                    <input type="checkbox" id="chkShowBadge" />
-                    <span>Show rating badge on item detail pages</span>
-                </label>
-                <label class="er-row">
-                    <input type="checkbox" id="chkShowOnCards" />
-                    <span>Show rating on poster cards (experimental)</span>
-                </label>
-            </div>
-
-            <div class="er-section">
-                <h3>⚡ Cache</h3>
-                <div class="er-field">
-                    <label for="numCacheDuration">Cache duration (hours)</label>
-                    <input type="number" id="numCacheDuration" min="1" max="720" style="max-width:120px;" />
+                <div class="verticalSection">
+                    <h3 class="sectionTitle">📺 IMDB (TV Shows)</h3>
+                    <label class="er-row">
+                        <input type="checkbox" id="chkEnableImdb" />
+                        <span>Enable IMDB ratings for TV shows</span>
+                    </label>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="txtOmdbApiKey">OMDB API Key</label>
+                        <input is="emby-input" type="password" id="txtOmdbApiKey" class="emby-input"
+                               autocomplete="off" placeholder="Get a free key at omdbapi.com/apikey.aspx" />
+                    </div>
+                    <p style="color: var(--text-color-secondary); font-size: 0.9em;">
+                        <a href="https://www.omdbapi.com/apikey.aspx" target="_blank" rel="noopener">Get a free OMDB key here</a> (1,000 requests/day).
+                    </p>
                 </div>
-                <button class="er-btn er-btn-clear" type="button" onclick="erClearCache()">
-                    Clear Rating Cache
-                </button>
-            </div>
 
-            <div>
-                <button class="er-btn er-btn-save" type="button" id="btnSave" onclick="erSave()">
-                    Save Settings
-                </button>
-            </div>
+                <div class="verticalSection">
+                    <h3 class="sectionTitle">🎨 Display</h3>
+                    <label class="er-row">
+                        <input type="checkbox" id="chkShowBadge" />
+                        <span>Show rating badge on item detail pages</span>
+                    </label>
+                    <label class="er-row">
+                        <input type="checkbox" id="chkShowOnCards" />
+                        <span>Show rating on poster cards (experimental)</span>
+                    </label>
+                </div>
 
+                <div class="verticalSection">
+                    <h3 class="sectionTitle">⚡ Cache</h3>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="numCacheDuration">Cache duration (hours)</label>
+                        <input is="emby-input" type="number" id="numCacheDuration" class="emby-input" min="1" max="720" />
+                    </div>
+                    <button is="emby-button" type="button" id="btnClearCache" class="raised button-cancel">
+                        <span>Clear Rating Cache</span>
+                    </button>
+                </div>
+
+                <div id="erStatus"></div>
+
+                <div>
+                    <button is="emby-button" type="button" id="btnSave" class="raised button-submit block">
+                        <span>Save Settings</span>
+                    </button>
+                </div>
+
+            </div>
         </div>
     </div>
-</div>
 
 <script type="text/javascript">
-var ER_PLUGIN_ID = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890';
-var _erStatusTimer = null;
+(function () {
 
-// ------------------------------------------------------------------
-// Status
-// ------------------------------------------------------------------
-function erStatus(msg, isErr) {
-    var el = document.getElementById('erStatus');
-    el.textContent = msg;
-    el.className = isErr ? 'err' : 'ok';
-    if (_erStatusTimer) clearTimeout(_erStatusTimer);
-    _erStatusTimer = setTimeout(function () {
-        el.className = '';
-    }, 5000);
-}
+    var PLUGIN_ID = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890';
+    var _statusTimer = null;
 
-// ------------------------------------------------------------------
-// Build fetch options using ApiClient — always available in Jellyfin SPA.
-// window.ApiClient is set by Jellyfin's web app before any plugin page loads.
-// ------------------------------------------------------------------
-function erFetch(url, options) {
-    options = options || {};
-    options.headers = options.headers || {};
-
-    // window.ApiClient is Jellyfin's global API client — always present in SPA
-    var token = window.ApiClient ? window.ApiClient.accessToken() : null;
-
-    // Fallback: parse localStorage directly
-    if (!token) {
-        try {
-            var raw = localStorage.getItem('jellyfin_credentials');
-            if (raw) {
-                var creds = JSON.parse(raw);
-                var servers = creds.Servers || creds.servers || [];
-                for (var i = 0; i < servers.length; i++) {
-                    if (servers[i].AccessToken || servers[i].accessToken) {
-                        token = servers[i].AccessToken || servers[i].accessToken;
-                        break;
-                    }
-                }
-            }
-        } catch (e) {
-            console.warn('[ExternalRatings] localStorage fallback failed:', e);
-        }
+    // ── Status bar ──────────────────────────────────────────────────
+    function showStatus(msg, isErr) {
+        var el = document.getElementById('erStatus');
+        el.textContent = msg;
+        el.className = isErr ? 'err' : 'ok';
+        if (_statusTimer) clearTimeout(_statusTimer);
+        _statusTimer = setTimeout(function () { el.className = ''; }, 5000);
     }
 
-    console.log('[ExternalRatings] Token found:', token ? token.substring(0, 8) + '...' : 'NONE');
-
-    if (token) {
-        options.headers['Authorization'] = 'MediaBrowser Token="' + token + '"';
-    } else {
-        erStatus('⚠ Could not find auth token — try refreshing the page.', true);
+    // ── Auth — exactly what the original working code used ──────────
+    function authHeader() {
+        return 'MediaBrowser Token="' + ApiClient.accessToken() + '"';
     }
 
-    options.credentials = 'include';
-    return fetch(url, options);
-}
+    // ── Load ────────────────────────────────────────────────────────
+    function loadConfig() {
+        fetch('/Plugins/' + PLUGIN_ID + '/Configuration', {
+            headers: { 'Authorization': authHeader() }
+        })
+        .then(function (r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+        })
+        .then(function (c) {
+            // Plain checkboxes: .checked works perfectly, no shadow DOM issues
+            document.getElementById('chkEnableLetterboxd').checked = (c.EnableLetterboxdRatings !== false);
+            document.getElementById('chkEnableImdb').checked       = (c.EnableImdbTvRatings !== false);
+            document.getElementById('chkShowBadge').checked        = (c.ShowRatingBadge !== false);
+            document.getElementById('chkShowOnCards').checked      = (c.ShowRatingOnCards === true);
+            document.getElementById('numCacheDuration').value      = c.CacheDurationHours || 24;
+            document.getElementById('txtOmdbApiKey').value         = c.OmdbApiKey || '';
+            console.log('[ExternalRatings] Loaded:', c);
+        })
+        .catch(function (e) {
+            console.error('[ExternalRatings] Load error:', e);
+            showStatus('Failed to load settings: ' + e.message, true);
+        });
+    }
 
-// ------------------------------------------------------------------
-// Load
-// ------------------------------------------------------------------
-function erLoad() {
-    erFetch('/Plugins/' + ER_PLUGIN_ID + '/Configuration')
-    .then(function (r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-    })
-    .then(function (c) {
-        document.getElementById('chkEnableLetterboxd').checked = (c.EnableLetterboxdRatings !== false);
-        document.getElementById('chkEnableImdb').checked       = (c.EnableImdbTvRatings !== false);
-        document.getElementById('chkShowBadge').checked        = (c.ShowRatingBadge !== false);
-        document.getElementById('chkShowOnCards').checked      = (c.ShowRatingOnCards === true);
-        document.getElementById('numCacheDuration').value      = c.CacheDurationHours || 24;
-        document.getElementById('txtOmdbApiKey').value         = c.OmdbApiKey || '';
-        console.log('[ExternalRatings] Loaded OK:', c);
-    })
-    .catch(function (e) {
-        console.error('[ExternalRatings] Load error:', e);
-        erStatus('Could not load settings: ' + e.message, true);
+    // ── Save ────────────────────────────────────────────────────────
+    function saveConfig() {
+        var btn = document.getElementById('btnSave');
+        btn.disabled = true;
+
+        var cfg = {
+            EnableLetterboxdRatings: document.getElementById('chkEnableLetterboxd').checked,
+            EnableImdbTvRatings:     document.getElementById('chkEnableImdb').checked,
+            ShowRatingBadge:         document.getElementById('chkShowBadge').checked,
+            ShowRatingOnCards:       document.getElementById('chkShowOnCards').checked,
+            CacheDurationHours:      parseInt(document.getElementById('numCacheDuration').value, 10) || 24,
+            OmdbApiKey:              document.getElementById('txtOmdbApiKey').value.trim()
+        };
+
+        console.log('[ExternalRatings] Saving:', cfg);
+
+        fetch('/Plugins/' + PLUGIN_ID + '/Configuration', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': authHeader()
+            },
+            body: JSON.stringify(cfg)
+        })
+        .then(function (r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            showStatus('✓ Settings saved!', false);
+            console.log('[ExternalRatings] Saved OK');
+        })
+        .catch(function (e) {
+            console.error('[ExternalRatings] Save error:', e);
+            showStatus('✗ Save failed: ' + e.message, true);
+        })
+        .then(function () {
+            btn.disabled = false;
+        });
+    }
+
+    // ── Buttons ─────────────────────────────────────────────────────
+    document.getElementById('btnSave').addEventListener('click', saveConfig);
+
+    document.getElementById('btnClearCache').addEventListener('click', function () {
+        if (!confirm('Clear all cached ratings?')) return;
+        fetch('/ExternalRatings/cache', {
+            method: 'DELETE',
+            headers: { 'Authorization': authHeader() }
+        })
+        .then(function (r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            showStatus('✓ Cache cleared.', false);
+        })
+        .catch(function (e) {
+            showStatus('✗ Clear cache failed: ' + e.message, true);
+        });
     });
-}
 
-// ------------------------------------------------------------------
-// Save
-// ------------------------------------------------------------------
-function erSave() {
-    var btn = document.getElementById('btnSave');
-    btn.disabled = true;
-    btn.textContent = 'Saving…';
+    // ── Init ─────────────────────────────────────────────────────────
+    var page = document.getElementById('ExternalRatingsConfigPage');
+    if (page) {
+        page.addEventListener('pageshow', loadConfig);
+    }
+    setTimeout(loadConfig, 200);
 
-    var cfg = {
-        EnableLetterboxdRatings: document.getElementById('chkEnableLetterboxd').checked,
-        EnableImdbTvRatings:     document.getElementById('chkEnableImdb').checked,
-        ShowRatingBadge:         document.getElementById('chkShowBadge').checked,
-        ShowRatingOnCards:       document.getElementById('chkShowOnCards').checked,
-        CacheDurationHours:      parseInt(document.getElementById('numCacheDuration').value, 10) || 24,
-        OmdbApiKey:              document.getElementById('txtOmdbApiKey').value.trim()
-    };
-
-    console.log('[ExternalRatings] Saving:', JSON.stringify(cfg));
-
-    erFetch('/Plugins/' + ER_PLUGIN_ID + '/Configuration', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(cfg)
-    })
-    .then(function (r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        erStatus('✓ Settings saved!', false);
-        console.log('[ExternalRatings] Save OK');
-    })
-    .catch(function (e) {
-        console.error('[ExternalRatings] Save error:', e);
-        erStatus('✗ Save failed: ' + e.message, true);
-    })
-    .then(function () {
-        btn.disabled = false;
-        btn.textContent = 'Save Settings';
-    });
-}
-
-// ------------------------------------------------------------------
-// Clear cache
-// ------------------------------------------------------------------
-function erClearCache() {
-    if (!confirm('Clear all cached ratings?')) return;
-    erFetch('/ExternalRatings/cache', { method: 'DELETE' })
-    .then(function (r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        erStatus('✓ Cache cleared.', false);
-    })
-    .catch(function (e) {
-        erStatus('✗ Clear cache failed: ' + e.message, true);
-    });
-}
-
-// ------------------------------------------------------------------
-// Init
-// ------------------------------------------------------------------
-var _erPage = document.getElementById('ExternalRatingsConfigPage');
-if (_erPage) {
-    _erPage.addEventListener('pageshow', erLoad);
-}
-setTimeout(erLoad, 300);
+})();
 </script>
 </body>
 </html>
