@@ -12,6 +12,7 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+      - name: Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
