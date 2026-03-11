@@ -12,7 +12,7 @@
         "version": "1.0.0.0",
         "changelog": "Initial release.",
         "targetAbi": "10.11.0.0",
-        "sourceUrl": "https://github.com/ya0903/jellyfin-plugin-externalratings/releases/download/v1.0.23/Jellyfin.Plugin.ExternalRatings_v1.0.23.zip",
+        "sourceUrl": "https://github.com/ya0903/jellyfin-plugin-externalratings/releases/download/v1.0.24/Jellyfin.Plugin.ExternalRatings_v1.0.24.zip",
         "checksum": "F1F49193E0268D04890F2B97B55BD128",
         "timestamp": "2025-01-01T00:00:00Z"
       }
