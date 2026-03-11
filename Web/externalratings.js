@@ -133,11 +133,20 @@
         return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
     }
 
+    function formatGuid(id) {
+        if (!id) return null;
+        id = id.replace(/-/g, '');
+        if (id.length === 32) {
+            return id.substring(0,8) + '-' + id.substring(8,12) + '-' + 
+                   id.substring(12,16) + '-' + id.substring(16,20) + '-' + id.substring(20);
+        }
+        return id;
+    }
+
     function getItemId() {
-        // Extract item ID from the current URL
-        const match = window.location.hash.match(/id=([a-f0-9]{32})/i)
+        const match = window.location.hash.match(/id=([a-f0-9]{32,36})/i)
             || window.location.search.match(/[?&]id=([a-f0-9\-]{32,36})/i);
-        return match ? match[1] : null;
+        return match ? formatGuid(match[1]) : null;
     }
 
     async function fetchRatings(itemId, forceRefresh) {
