@@ -95,6 +95,13 @@
             return 'MediaBrowser Token="' + ApiClient.accessToken() + '"';
         }
 
+        // Sets a checkbox and fires a change event so emby-checkbox web component picks it up
+        function setCheckbox(id, value) {
+            var el = document.getElementById(id);
+            el.checked = value;
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
         function loadConfig() {
             fetch('/Plugins/' + PLUGIN_ID + '/Configuration', {
                 headers: { 'Authorization': authHeader() }
@@ -104,12 +111,12 @@
                 return r.json();
             })
             .then(function (config) {
-                document.getElementById('chkEnableLetterboxd').checked = config.EnableLetterboxdRatings !== false;
-                document.getElementById('chkEnableImdb').checked       = config.EnableImdbTvRatings !== false;
-                document.getElementById('chkShowBadge').checked        = config.ShowRatingBadge !== false;
-                document.getElementById('chkShowOnCards').checked      = config.ShowRatingOnCards === true;
-                document.getElementById('numCacheDuration').value      = config.CacheDurationHours || 24;
-                document.getElementById('txtOmdbApiKey').value         = config.OmdbApiKey || '';
+                setCheckbox('chkEnableLetterboxd', config.EnableLetterboxdRatings !== false);
+                setCheckbox('chkEnableImdb',       config.EnableImdbTvRatings !== false);
+                setCheckbox('chkShowBadge',        config.ShowRatingBadge !== false);
+                setCheckbox('chkShowOnCards',      config.ShowRatingOnCards === true);
+                document.getElementById('numCacheDuration').value = config.CacheDurationHours || 24;
+                document.getElementById('txtOmdbApiKey').value    = config.OmdbApiKey || '';
             })
             .catch(function (err) {
                 console.error('[ExternalRatings] loadConfig failed:', err);
@@ -167,12 +174,17 @@
             });
         });
 
-        // Load on page show (Jellyfin SPA navigation) and also immediately
+        // Load on Jellyfin SPA page navigation
         var page = document.getElementById('ExternalRatingsConfigPage');
         if (page) {
-            page.addEventListener('pageshow', loadConfig);
+            page.addEventListener('pageshow', function () {
+                // Delay to ensure emby-checkbox custom elements have fully upgraded
+                setTimeout(loadConfig, 150);
+            });
         }
-        loadConfig();
+
+        // Also load on initial page load with the same delay
+        setTimeout(loadConfig, 150);
 
     })();
 </script>
